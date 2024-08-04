@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<!--
+    Story by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+
+    Note: Only needed for demo purposes. Delete for production sites.
+-->
+
+<html>
+
+    <head>
+        <title>Sneha & Vignesh Tie The Knot</title>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    </head>
+
+    <body class="is-preload">
+
+        <!-- Wrapper -->
+        <div id="wrapper" class="divided"> </div>
+
+        <!-- Scripts -->
+          <script src="indexEncrypted.js"></script>
+          <script src="calenderEvent.js"></script>
+          <script src="assets/js/jquery.min.js"></script>
+          <script src="assets/js/jquery.scrollex.min.js"></script>
+          <script src="assets/js/jquery.scrolly.min.js"></script>
+          <script src="assets/js/browser.min.js"></script>
+          <script src="assets/js/breakpoints.min.js"></script>
+          <script src="assets/js/util.js"></script>
+          <script src="assets/js/main.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+          <script src="assets/js/demo.js"></script>
+
+          <script>
+
+              function encrypt(text, key) {
+                  return CryptoJS.AES.encrypt(text, key).toString();
+              }
+
+              function decrypt(text, key) {
+                  return CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+              }
+
+              function parseUrl() {
+                  var queryString = window.location.search;
+                  var urlParams = new URLSearchParams(queryString);
+                  var password = urlParams.get('pwd');
+                  var haldi = urlParams.get('hld');
+                  var sangeet = urlParams.get('sgt');
+                  var lunch = urlParams.get('lnh')
+
+                  return { password: password,
+                           haldi: haldi,
+                           sangeet: sangeet,
+                           lunch: lunch
+                  }
+              }
+
+              function switchEventsDiv(params) {
+                  if (params.haldi === "true") {
+                      const elements = document.getElementsByClassName("haldi");
+                      for (let i = 0; i < elements.length; i++) {
+                          elements[i].classList.toggle("haldi-hidden");
+                      }
+                  }
+
+                  if (params.sangeet === "true") {
+                      const elements = document.getElementsByClassName("sangeet");
+                      for (let i = 0; i < elements.length; i++) {
+                          elements[i].classList.toggle("sangeet-hidden");
+                      }
+                  }
+
+                  if (params.lunch === "true") {
+                      const elements = document.getElementsByClassName("lunch");
+                      for (let i = 0; i < elements.length; i++) {
+                          elements[i].classList.toggle("lunch-hidden");
+                      }
+                  }
+
+              }
+
+              function startCountdownTimer(password) {
+                  // get the date element
+                  var dateString = $('#datetime')[0].innerText;
+                  var countDownDate = new Date(dateString).getTime();
+
+                  var x = setInterval(function() {
+                      var now = new Date().getTime();
+                      var distance = countDownDate - now;
+                      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                      document.getElementById("countdown").innerHTML =
+                              days + " Days&nbsp;&nbsp;&nbsp;&nbsp;" +
+                              hours + " Hours&nbsp;&nbsp;&nbsp;&nbsp;" +
+                              minutes + " Minutes&nbsp;&nbsp;&nbsp;&nbsp;" +
+                              seconds + " Seconds";
+
+                              if (distance < 0) {
+                                clearInterval(x);
+                                document.getElementById("countdown").innerHTML = "EXPIRED";
+                              }
+                  }, 1000);
+              }
+
+              // JQuery Function
+              function parseFormData(form) {
+                  var elements = form.elements;
+                  var honeypot;
+                  var formData = {};
+
+                  var fields = Object.keys(elements).filter(function(k) {
+                      if (elements[k].name === "honeypot") {
+                          honeypot = elements[k].value;
+                          return false;
+                      }
+                      return true;
+                  }).map(function(k) {
+                      if (elements[k].name !== undefined) {
+                      return elements[k].name;
+                      // special case for Edge's html collection
+                      } else if(elements[k].length > 0){
+                          return elements[k].item(0).name;
+                      }
+                  }).filter(function(item, pos, self) {
+                      return self.indexOf(item) == pos && item;
+                  });
+
+                  fields.forEach(function(name){
+                      var element = elements[name];
+                      // singular form elements just have one value
+                      formData[name] = element.value;
+
+                      // when our element has multiple items, get their values
+                      if (element.length) {
+                          var data = [];
+                          for (var i = 0; i < element.length; i++) {
+                              var item = element.item(i);
+                              if (item.checked || item.selected) {
+                                  data.push(item.value);
+                              }
+                          }
+                          formData[name] = data.join(', ');
+                      }
+                  });
+
+                  // add form-specific values into the data
+                  formData.formDataNameOrder = JSON.stringify(fields);
+                  formData.formGoogleSheetName = form.dataset.sheet || "responses"; // default sheet name
+                  formData.formGoogleSendEmail = form.dataset.email || ""; // no email by default
+
+                  return {data: formData, honeypot: honeypot};
+              }
+
+              // JQuery function
+              function handleRSVPForm(password) {
+                  var form = event.target;
+                  var formData = parseFormData(form);
+                  var data = formData.data;
+
+                  // If a honeypot field is filled, assume it was done so by a spam bot.
+                  if (formData.honeypot) {
+                      return false;
+                  }
+
+                  // disable all form buttons
+                  var buttons = form.querySelectorAll("button");
+                  for (var i = 0; i < buttons.length; i++) {
+                      buttons[i].disabled = true;
+                  }
+
+                  var url = $("#form-url")[0].innerText;
+                  console.log("form-url="+url);
+
+                  var xhr = new XMLHttpRequest();
+                  xhr.open('POST', url);
+                  // xhr.withCredentials = true;
+                  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                  xhr.onreadystatechange = function() {
+                      if (xhr.readyState === 4 && xhr.status === 200) {
+                          console.log(xhr.response);
+                          console.log(xhr.responseText);
+                          form.reset();
+                          $("#rsvp-form-section").hide();
+                          $("#rsvp-form-message").show();
+                          $('#rsvp')[0].scrollIntoView({behavior: 'smooth'});
+                      }
+                  };
+
+                  // url encode form data for sending as post data
+                  var encoded = Object.keys(data).map(function(k) {
+                      return encodeURIComponent(k) + "=" + encodeURIComponent(data[k]);
+                  }).join('&');
+
+                  console.log(encoded);
+                  xhr.send(encoded);
+              }
+
+              $(document).ready(function(){
+
+                  // parse URL parameter and display
+                  var params;
+                  params = parseUrl();
+                  console.log("password=" + params.password);
+                  console.log("haldi=" + params.haldi);
+                  console.log("sangeet=" + params.sangeet);
+                  console.log("lunch=" + params.lunch);
+
+                  // decrypt the whole html page and render it
+                  $("#wrapper").html(decrypt(encryptedPage, params.password));
+
+                  // start countdown timer
+                  startCountdownTimer(params.password);
+
+                  // display selected events
+                  switchEventsDiv(params);
+
+                  // form handler
+                  document.forms['rsvp-form'].reset();
+                  $("#rsvp-form").on("submit", function(event) {
+                      $("#rsvp-submit")[0].disabled = true;
+                      event.preventDefault();
+                      handleRSVPForm(params.password);
+                  });
+
+                // save the date. Decrypt the file and download
+                $('#savethedate').click(function() {
+                    var fileContent = decrypt(saveTheDate, params.password);
+                    var blob = new Blob([fileContent], { type: 'text/calender' });
+                    var url = URL.createObjectURL(blob);
+                    var a = $('<a/>', { href: url, download: 'calender.ics'}).appendTo('body');
+                    // Step 5: Simulate a click on the download link
+                    a[0].click();
+                    URL.revokeObjectURL(url);
+                    a.remove();
+                });
+
+
+
+              });
+
+          </script>
+
+    </body>
+</html>

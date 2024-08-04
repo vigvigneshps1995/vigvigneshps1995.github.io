@@ -24,7 +24,7 @@ case $cmd in
 	file=`cat $enc_file`
 	res="${file//var encryptedPage=\"/}"
 	res="${res//\";/}"
-	echo "$res" | openssl enc -e -d -a -A -aes-256-cbc -k $passwd -md MD5
+	echo "$res" | openssl enc -e -d -a -A -aes-256-cbc -k $passwd -md MD5 -out $dec_file
         ;;
     *)
         echo "Invalid argument: $arg"

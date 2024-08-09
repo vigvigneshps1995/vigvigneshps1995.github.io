@@ -9027,3 +9027,9 @@ body.is-preload .items.onload-fade-in>*>.inner {
     padding-top: 100px;
     padding-bottom: 100px;
 }
+
+.hashtag {
+    color: crimson;
+    font-weight: 500;
+    font-size: 30px;
+}

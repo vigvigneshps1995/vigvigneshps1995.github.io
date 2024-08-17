@@ -283,6 +283,7 @@ i {
 
 p {
     margin: 0 0 2rem 0;
+    line-height: 35px;
 }
 
 p.major {
@@ -8453,7 +8454,7 @@ body.is-preload .items.onload-fade-in>*>.inner {
 
 #wrapper>.invert input,
 #wrapper>.invert select,
-#wrapper>.invert textarea {
+#wrapper>.invsert textarea {
     color: #ffffff;
 }
 

@@ -220,6 +220,7 @@
                   $("#wrapper").html(decrypt(encryptedPage, params.password));
 
                   // add the banner image
+                  $("#banner_image")[0].src = "images/banner.png"
                   /*
 		  var rand = Math.floor(Math.random() * 10);
                   console.log(rand);
@@ -256,7 +257,10 @@
                     a.remove();
                 });
 
-
+		// to copy hashtag
+		$(".hashtag").click(function() {
+		        navigator.clipboard.writeText(this.innerHTML);
+		});
 
               });
 

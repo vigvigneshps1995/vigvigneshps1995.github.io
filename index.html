@@ -257,10 +257,15 @@
                     a.remove();
                 });
 
-		// to copy hashtag
-		$(".hashtag").click(function() {
-		        navigator.clipboard.writeText(this.innerHTML);
-		});
+		            // to copy hashtag
+		            $(".hashtag").click(function() {
+                  navigator.clipboard.writeText(this.innerHTML);
+                  // $("#myPopup").css('visibility', 'visible');
+                  $("#myPopup").addClass('show');
+                  setTimeout(function() {
+                      $("#myPopup").removeClass('show');
+                  }, 2000);
+	            	});
 
               });
 

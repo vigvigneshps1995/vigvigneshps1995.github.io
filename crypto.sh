@@ -16,15 +16,19 @@ dec_file=index-dec.html
 case $cmd in
     enc)
         echo "Encrypting..."
-        hello=`openssl enc -e -a -A -aes-256-cbc -k $passwd -md MD5 -in $dec_file`
-	echo "var encryptedPage=\"$hello\";" > $enc_file
+        content=`openssl enc -e -a -A -aes-256-cbc -k $passwd -md MD5 -in $dec_file`
+        echo "var encryptedPage=\"$content\";" > $enc_file
+        openssl enc -e -a -A -aes-256-cbc -k $passwd -md MD5 -in calendar_events.txt -out calendar_events.txt.enc
+        openssl enc -e -a -A -aes-256-cbc -k $passwd -md MD5 -in rsvp_confirmation.gs -out rsvp_confirmation.gs.enc
         ;;
     dec)
         echo "Decrypting..."
-	file=`cat $enc_file`
-	res="${file//var encryptedPage=\"/}"
-	res="${res//\";/}"
-	echo "$res" | openssl enc -e -d -a -A -aes-256-cbc -k $passwd -md MD5 -out $dec_file
+        file=`cat $enc_file`
+	      res="${file//var encryptedPage=\"/}"
+	      res="${res//\";/}"
+	      echo "$res" | openssl enc -e -d -a -A -aes-256-cbc -k $passwd -md MD5 -out $dec_file
+	      openssl enc -e -d -a -A -aes-256-cbc -k $passwd -md MD5 -in calendar_events.txt.enc -out calendar_events.txt
+	      openssl enc -e -d -a -A -aes-256-cbc -k $passwd -md MD5 -in rsvp_confirmation.gs.enc -out rsvp_confirmation.gs 
         ;;
     *)
         echo "Invalid argument: $arg"
